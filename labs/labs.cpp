@@ -88,28 +88,46 @@ class lab7
 {
     public:
 
-	static float firstMethod(int x)
+	static float firstMethod(float x)
 	{
-        if (x < -2)
+        if (-2 > x)
             return -1;
+        if (1 <= x)
+            return 0;
+        else
+        {
+            if (x < 0)
+                return x + 1;
+            else return 1;
+        }
+	}
+    static float secondMethod(float x)
+	{
+        if (-2 > x)
+            return -1;
+        if (0 <= x && x < 1)
+            return 1;
+        if (-2 <= x && x < 0)
+            return x + 1;
+        return 0;
 	}
 };
 //вариант 5, лаба 9
 struct vector2
 {
     std::pair<int, int> start, end;
-    double lenght = 0;
+    double length;
     int x, y;
     vector2(std::pair<int, int> a, std::pair<int, int> b): start(a), end(b)
     {
-        lenght = len_calc(start, end);
+        length = len_calc(start, end);
         x = end.first - start.first;
         y = end.second - start.second;
     }
 
 	double operator+(const vector2& v) const
     {
-       return  v.lenght + lenght;
+       return  v.length + length;
     }
 private:
     double len_calc(std::pair<int, int> a, std::pair<int, int> b)
@@ -120,7 +138,7 @@ private:
 
 double angle_calc(vector2 first, vector2 second)
 {
-    float cosinus = abs(first.x * second.x + first.y * second.y) / (first.lenght * second.lenght);
+    float cosinus = abs(first.x * second.x + first.y * second.y) / (first.length * second.length);
     return acos(cosinus) * 180 / M_PI;
 }
 std::string lab9(std::pair<int,int> a, std::pair<int, int> b, std::pair<int, int> c, std::pair<int, int> d)
@@ -137,10 +155,10 @@ std::string lab9(std::pair<int,int> a, std::pair<int, int> b, std::pair<int, int
     if (angle_calc(vectors[0], vectors[2]) == 0 && angle_calc(vectors[1], vectors[3]) == 0)
     {
         //если противоположные стороны равны
-        if (vectors[0].lenght == vectors[2].lenght && vectors[1].lenght == vectors[3].lenght)
+        if (vectors[0].length == vectors[2].length && vectors[1].length == vectors[3].length)
         {
             //если все стороны равны
-            if ((vectors[0] + vectors[1] + (vectors[2] + vectors[3])) / 4 == vectors[0].lenght)
+            if ((vectors[0] + vectors[1] + (vectors[2] + vectors[3])) / 4 == vectors[0].length)
             {
                 //и перпендикулярны
                 if ((int)angle_calc(vectors[0], vectors[1]) == 90)
@@ -156,17 +174,17 @@ std::string lab9(std::pair<int,int> a, std::pair<int, int> b, std::pair<int, int
         }
     }
 		//если хотя бы одна пара противоположных сторон паралелльна
-        if (vectors[0].lenght == vectors[2].lenght || vectors[1].lenght == vectors[3].lenght)
+        if (angle_calc(vectors[0], vectors[2]) == 0 || angle_calc(vectors[1], vectors[3]) == 0)
             return "trapezoid";
 		
-        auto iter = std::find_if(std::begin(vectors) + 1, std::end(vectors), [vectors](vector2 param) { return param.lenght == vectors[0].lenght; });
+        auto iter = std::find_if(std::begin(vectors) + 1, std::end(vectors), [vectors](vector2 param) { return param.length == vectors[0].length; });
         if (iter != std::end(vectors))
         {
             std::remove_if(std::begin(vectors), std::end(vectors), [iter](vector2 v)
                 {
-                   return v.lenght == iter->lenght;
+                   return v.length == iter->length;
                 });
-            if (vectors[0].lenght == vectors[1].lenght)
+            if (vectors[0].length == vectors[1].length)
                 return "deltoid";
         }
         return "arbitrary quadrangle";
@@ -199,7 +217,17 @@ int main()
     std::cout << lab9(std::pair<int, int>(1, 1), std::pair<int, int>(1, 5), std::pair<int, int>(5, 5), std::pair<int, int>(5, 1)) << std::endl;
     //прямоугольник
     std::cout << lab9(std::pair<int, int>(1, 1), std::pair<int, int>(1, 8), std::pair<int, int>(5, 8), std::pair<int, int>(5, 1)) << std::endl;
+    //трапеция
+    std::cout << lab9(std::pair<int, int>(1, 1), std::pair<int, int>(2, 5), std::pair<int, int>(5, 5), std::pair<int, int>(7, 1)) << std::endl;
+    //дельтоид
+    std::cout << lab9(std::pair<int, int>(5, 5), std::pair<int, int>(9, 3), std::pair<int, int>(5, 1), std::pair<int, int>(3, 3)) << std::endl;
     //lab10(std::pair<int, int>(12, 87));
+
+    for(int i = - 5; i< 5; i++)
+    {
+        float res = lab7::firstMethod(i);
+        std::cout << "x: " << i << " res: " << res << "\t"<<(res == lab7::secondMethod(i))<<std::endl;
+    }
 }
 
 
