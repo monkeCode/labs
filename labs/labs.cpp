@@ -90,16 +90,20 @@ class lab7
 
 	static float firstMethod(float x)
 	{
+        float result;
         if (-2 > x)
-            return -1;
-        if (1 <= x)
-            return 0;
-        else
-        {
-            if (x < 0)
-                return x + 1;
-            else return 1;
+            result = -1;
+        else {
+            if (1 <= x)
+                result = 0;
+            else
+            {
+                if (x < 0)
+                    result = x + 1;
+                else result = 1;
+            }
         }
+        return result;
 	}
     static float secondMethod(float x)
 	{
@@ -111,6 +115,35 @@ class lab7
             return x + 1;
         return 0;
 	}
+};
+
+class lab8
+{
+public:
+
+    static int firstMehtod(float x, float y)
+    {
+        int result = 0;
+	    if(y  >= abs(0.5*x))
+	    {
+	    	result = 2;
+	    }
+         if (y <= -0.5 * abs(x))
+         	result = 2;
+        if(abs(y) <= 0.5*abs(x))
+        {
+            if (x > 0)
+            {
+                if (x <= 2)
+                {
+                    result = 1;
+                }
+                else result = 3;
+            }
+            else result = 4;
+        }
+        return result;
+    }
 };
 //вариант 5, лаба 9
 struct vector2
@@ -211,23 +244,22 @@ std::pair<int, int> lab10(std::pair<int,int> numbers)
 
 int main()
 {
-    //ромб
-    std::cout << lab9(std::pair<int, int>(3, 2), std::pair<int, int>(1, 5), std::pair<int, int>(3, 8), std::pair<int, int>(5, 5))<<std::endl;
-    //квадрат
-    std::cout << lab9(std::pair<int, int>(1, 1), std::pair<int, int>(1, 5), std::pair<int, int>(5, 5), std::pair<int, int>(5, 1)) << std::endl;
-    //прямоугольник
-    std::cout << lab9(std::pair<int, int>(1, 1), std::pair<int, int>(1, 8), std::pair<int, int>(5, 8), std::pair<int, int>(5, 1)) << std::endl;
-    //трапеция
-    std::cout << lab9(std::pair<int, int>(1, 1), std::pair<int, int>(2, 5), std::pair<int, int>(5, 5), std::pair<int, int>(7, 1)) << std::endl;
-    //дельтоид
-    std::cout << lab9(std::pair<int, int>(5, 5), std::pair<int, int>(9, 3), std::pair<int, int>(5, 1), std::pair<int, int>(3, 3)) << std::endl;
-    //lab10(std::pair<int, int>(12, 87));
+    ////lab6();
+    ////ромб
+    //std::cout << lab9(std::pair<int, int>(3, 2), std::pair<int, int>(1, 5), std::pair<int, int>(3, 8), std::pair<int, int>(5, 5))<<std::endl;
+    ////квадрат
+    //std::cout << lab9(std::pair<int, int>(1, 1), std::pair<int, int>(1, 5), std::pair<int, int>(5, 5), std::pair<int, int>(5, 1)) << std::endl;
+    ////прямоугольник
+    //std::cout << lab9(std::pair<int, int>(1, 1), std::pair<int, int>(1, 8), std::pair<int, int>(5, 8), std::pair<int, int>(5, 1)) << std::endl;
+    ////трапеция
+    //std::cout << lab9(std::pair<int, int>(1, 1), std::pair<int, int>(2, 5), std::pair<int, int>(5, 5), std::pair<int, int>(7, 1)) << std::endl;
+    ////дельтоид
+    //std::cout << lab9(std::pair<int, int>(5, 5), std::pair<int, int>(9, 3), std::pair<int, int>(5, 1), std::pair<int, int>(3, 3)) << std::endl;
+    //std::cout << lab9(std::pair<int, int>(-1, 0), std::pair<int, int>(0, 3), std::pair<int, int>(11, 0), std::pair<int, int>(0, -3)) << std::endl;
+   /* auto p = lab10(std::pair<int, int>(10, 89));
+    std::cout << p.first << ' ' << p.second;*/
 
-    for(int i = - 5; i< 5; i++)
-    {
-        float res = lab7::firstMethod(i);
-        std::cout << "x: " << i << " res: " << res << "\t"<<(res == lab7::secondMethod(i))<<std::endl;
-    }
+    std::cout << lab8::firstMehtod(2, 0.5);
 }
 
 
