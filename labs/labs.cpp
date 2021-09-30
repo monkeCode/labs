@@ -121,16 +121,16 @@ class lab8
 {
 public:
 
-    static int firstMehtod(float x, float y)
+    static int firstMethod(float x, float y)
     {
         int result = 0;
-	    if(y  >= abs(0.5*x))
+	    if(abs(y)  >= abs(0.5*x))
 	    {
 	    	result = 2;
 	    }
-         if (y <= -0.5 * abs(x))
-         	result = 2;
-        if(abs(y) <= 0.5*abs(x))
+       /*  if (y <= -0.5 * abs(x))
+         	result = 2;*/
+        else
         {
             if (x > 0)
             {
@@ -141,6 +141,22 @@ public:
                 else result = 3;
             }
             else result = 4;
+        }
+        return result;
+    }
+    static int secondMethod(float x, float y)
+    {
+        int result = 4;
+        if (abs(y) >= abs(0.5 * x))
+        {
+            result = 2;
+        }
+        if (abs(y) < abs(0.5 * x) && x > 0)
+        {
+            if(x <=2)
+            result = 1;
+            if (x > 2)
+                result = 3;
         }
         return result;
     }
@@ -259,7 +275,10 @@ int main()
    /* auto p = lab10(std::pair<int, int>(10, 89));
     std::cout << p.first << ' ' << p.second;*/
 
-    std::cout << lab8::firstMehtod(2, 0.5);
+
+    float x = 1.f;
+    float y = 0.4f;
+    std::cout << lab8::firstMethod(x, y)<< " "<<lab8::secondMethod(x,y);
 }
 
 
