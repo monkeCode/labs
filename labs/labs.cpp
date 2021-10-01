@@ -124,12 +124,10 @@ public:
     static int firstMethod(float x, float y)
     {
         int result = 0;
-	    if(abs(y)  >= abs(0.5*x))
-	    {
-	    	result = 2;
-	    }
-       /*  if (y <= -0.5 * abs(x))
-         	result = 2;*/
+        if (abs(y) >= abs(0.5 * x))
+        {
+            result = 2;
+        }
         else
         {
             if (x > 0)
@@ -144,6 +142,7 @@ public:
         }
         return result;
     }
+
     static int secondMethod(float x, float y)
     {
         int result = 4;
@@ -257,28 +256,82 @@ std::pair<int, int> lab10(std::pair<int,int> numbers)
    max = *(vec.end() - 1) * 10 + *(vec.end() - 1);
    return std::pair<int,int>(min,max);
 }
-
+//лаба 11, 7
+void lab11()
+{
+    std::cout << "x\t\tsqrt(x-1)\tF(x)\t\toptimized F(x)\tdelta\t\t\trelative delta\n";
+	for (double x =1; x >= pow(0.5, 6); x*=0.5)
+	{
+        std::cout <<x<<"\t\t"<< sqrt(x + 1)<<"\t\t";
+        double n1 = 1 + x / 2 - pow(x, 2) / (2 * 4) + pow(x, 3) / (2 * 4 * 6) - 3 * 5 * pow(x, 4) / (2 * 4 * 6 * 8);
+        double n2 = 1 + x / 2 - pow(x, 2) / 8 + pow(x, 3) / 16 - 5 * pow(x, 4) / 128;
+        std::cout << n1 << "\t\t" << n2<<"\t\t";
+        double del = abs(n2 - n1);
+        double relativeDel = del / n2;
+        std::cout << del<<"\t\t" << relativeDel;
+        std::cout<<std::endl;
+	}
+}
+//лаба 13, 2
+void lab13(int x)
+{
+    int divCount = 0;
+    bool minEx = 0;
+	for(int i = 2; i<= x; i++)
+	{
+		if(x % i == 0)
+		{
+			if(!minEx)
+			{
+                std::cout << "Min divider: " << i<<"\n";
+                minEx = 1;
+			}
+            std::cout << i<<"\n";
+            divCount++;
+		}
+	}
+    if (divCount == 1)
+        std::cout << "Prime";
+}
+void lab13(int x, bool useWhile)
+{
+    int divCount = 0;
+    bool minEx = 0;
+    int i = 2;
+    while(i <= x)
+    {
+        if (x % i == 0)
+        {
+            if (!minEx)
+            {
+                std::cout << "Min divider: " << i << "\n";
+                minEx = 1;
+            }
+            std::cout << i << "\n";
+            divCount++;
+        }
+        i++;
+    }
+    if (divCount == 1)
+        std::cout << "Prime";
+}
 int main()
 {
-    ////lab6();
-    ////ромб
-    //std::cout << lab9(std::pair<int, int>(3, 2), std::pair<int, int>(1, 5), std::pair<int, int>(3, 8), std::pair<int, int>(5, 5))<<std::endl;
-    ////квадрат
-    //std::cout << lab9(std::pair<int, int>(1, 1), std::pair<int, int>(1, 5), std::pair<int, int>(5, 5), std::pair<int, int>(5, 1)) << std::endl;
-    ////прямоугольник
-    //std::cout << lab9(std::pair<int, int>(1, 1), std::pair<int, int>(1, 8), std::pair<int, int>(5, 8), std::pair<int, int>(5, 1)) << std::endl;
-    ////трапеция
-    //std::cout << lab9(std::pair<int, int>(1, 1), std::pair<int, int>(2, 5), std::pair<int, int>(5, 5), std::pair<int, int>(7, 1)) << std::endl;
-    ////дельтоид
-    //std::cout << lab9(std::pair<int, int>(5, 5), std::pair<int, int>(9, 3), std::pair<int, int>(5, 1), std::pair<int, int>(3, 3)) << std::endl;
-    //std::cout << lab9(std::pair<int, int>(-1, 0), std::pair<int, int>(0, 3), std::pair<int, int>(11, 0), std::pair<int, int>(0, -3)) << std::endl;
-   /* auto p = lab10(std::pair<int, int>(10, 89));
-    std::cout << p.first << ' ' << p.second;*/
+    for (int i = -3; i < 2;i++)
+      std::cout<<"x = "<<i<<"\tres = "<<lab7::firstMethod(i)<<" "<<lab7::secondMethod(i)<<"\n";
 
 
-    float x = 1.f;
-    float y = 0.4f;
-    std::cout << lab8::firstMethod(x, y)<< " "<<lab8::secondMethod(x,y);
+    float x = 0.f;
+    float y = 0.f;
+    //std::cout << lab8::firstMethod(x, y)<< " "<<lab8::secondMethod(x,y);
+
+
+    //lab11();
+
+
+   /* lab13(7);
+    std::cout << "\n";
+    lab13(7,1);*/
 }
 
 
