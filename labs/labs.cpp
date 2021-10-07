@@ -259,79 +259,159 @@ std::pair<int, int> lab10(std::pair<int,int> numbers)
 //лаба 11, 7
 void lab11()
 {
-    std::cout << "x\t\tsqrt(x-1)\tF(x)\t\toptimized F(x)\tdelta\t\t\trelative delta\n";
+    std::cout << /*"x\t\t" +*/"sqrt(x - 1)\tF(x)\t\toptimized F(x)\tdelta\t\t\trelative delta\n";
 	for (double x =1; x >= pow(0.5, 6); x*=0.5)
 	{
-        std::cout <<x<<"\t\t"<< sqrt(x + 1)<<"\t\t";
-        double n1 = 1 + x / 2 - pow(x, 2) / (2 * 4) + pow(x, 3) / (2 * 4 * 6) - 3 * 5 * pow(x, 4) / (2 * 4 * 6 * 8);
-        double n2 = 1 + x / 2 - pow(x, 2) / 8 + pow(x, 3) / 16 - 5 * pow(x, 4) / 128;
-        std::cout << n1 << "\t\t" << n2<<"\t\t";
-        double del = abs(n2 - n1);
-        double relativeDel = del / n2;
-        std::cout << del<<"\t\t" << relativeDel;
+        //std::cout <<x<<"\t\t";
+        std::cout << sqrt(x + 1)<<"\t\t";
+        double nonOptimized = 1 + x / 2 - pow(x, 2) / (2 * 4) + pow(x, 3) / (2 * 4 * 6) - 3 * 5 * pow(x, 4) / (2 * 4 * 6 * 8);
+        double optimized = 1 + x / 2 - pow(x, 2) / 8 + pow(x, 3) / 16 - 5 * pow(x, 4) / 128;
+        std::cout << nonOptimized << "\t\t" << optimized<<"\t\t";
+        double del = abs(nonOptimized - optimized);
+        double relativeDel = del / optimized;
+        std::cout << del<<"\t\t" << relativeDel * 100<<"%";
         std::cout<<std::endl;
 	}
 }
 //лаба 13, 2
-void lab13(int x)
+void lab13(int x, bool useWhile = false)
 {
     int divCount = 0;
     bool minEx = 0;
-	for(int i = 2; i<= x; i++)
-	{
-		if(x % i == 0)
-		{
-			if(!minEx)
-			{
-                std::cout << "Min divider: " << i<<"\n";
-                minEx = 1;
-			}
-            std::cout << i<<"\n";
-            divCount++;
-		}
-	}
-    if (divCount == 1)
-        std::cout << "Prime";
-}
-void lab13(int x, bool useWhile)
-{
-    int divCount = 0;
-    bool minEx = 0;
-    int i = 2;
-    while(i <= x)
+    if (!useWhile)
     {
-        if (x % i == 0)
+       
+        for (int i = 2; i <= x; i++)
         {
-            if (!minEx)
+            if (x % i == 0)
             {
-                std::cout << "Min divider: " << i << "\n";
-                minEx = 1;
+                if (!minEx)
+                {
+                    std::cout << "Min divider: " << i << "\n";
+                    minEx = 1;
+                }
+                std::cout << i << "\n";
+                divCount++;
             }
-            std::cout << i << "\n";
-            divCount++;
         }
-        i++;
+        
+    }
+    else
+    {
+        int i = 2;
+        while (i <= x)
+        {
+            if (x % i == 0)
+            {
+                if (!minEx)
+                {
+                    std::cout << "Min divider: " << i << "\n";
+                    minEx = 1;
+                }
+                std::cout << i << "\n";
+                divCount++;
+            }
+            i++;
+        }
+        
     }
     if (divCount == 1)
         std::cout << "Prime";
+    else std::cout << "not a prime number";
 }
+//лаба 15, 23 вариант
+void lab15(std::pair<double,double> segment, double step)
+{
+    double args[12];
+    int i = 0;
+	for(double x = segment.first ; x <= segment.second, i < 12 ; x+=step)
+	{
+        std::cout << exp(-x / 3) * pow(sin(5 * x), 2)<<std::endl;
+	}
+}
+
+class matrix
+{
+private:
+    float** _matrix;
+    int _side;
+
+    float min_in_upper_triangle_matrix()
+    {
+        float min = _matrix[0][0];
+        for (int i = 0; i < _side; i++)
+            for (int j = i; j < _side; j++)
+            {
+                min = min > _matrix[i][j] ? _matrix[i][j] : min;
+            }
+        return min;
+    }
+	float find_multiple(float lessNumber)
+    {
+        bool findAnyNumber = false;
+        float multiple = 1;
+	    for(int i = 0; i <_side;i++)
+            for (int j = 0; j <=i;j++)
+            {
+                if (_matrix[i][j] < lessNumber)
+                {
+                    multiple *= _matrix[i][j];
+                    findAnyNumber = true;
+                }
+            }
+        //if (!findAnyNumber)
+           // throw "all numbers are greater than a given number";
+        return  multiple;
+    }
+public:
+	matrix(int side, float **m)
+	{
+        _side = side;
+        _matrix = m;
+	}
+    void lab16()
+	{
+        for (int i = 0; i < _side; i++)
+        {
+            for (int j = 0; j < _side; j++)
+            {
+                std::cout << _matrix[i][j] << " ";
+            }
+            std::cout << "\n";
+        }
+        std::cout << "multiple = " << find_multiple(min_in_upper_triangle_matrix());
+	}
+ ~matrix()
+	{
+		for(int i =0; i< _side;i++)
+		{
+            delete _matrix[i];
+		}
+        _matrix = nullptr;
+	}
+};
 int main()
 {
-    for (int i = -3; i < 2;i++)
-      std::cout<<"x = "<<i<<"\tres = "<<lab7::firstMethod(i)<<" "<<lab7::secondMethod(i)<<"\n";
 
-
-    float x = 0.f;
-    float y = 0.f;
-    //std::cout << lab8::firstMethod(x, y)<< " "<<lab8::secondMethod(x,y);
+   /* for(float x = -100; x<100; x+=0.5 )
+        for(float y = -100; y < 100; y += 0.5)
+    if(lab8::firstMethod(x,y) != lab8::secondMethod(x,y))
+    {
+        std::cout << x << " " << y<<std::endl;
+    }*/
 
 
     //lab11();
 
 
-   /* lab13(7);
+    /*lab13(8);
     std::cout << "\n";
-    lab13(7,1);*/
+    lab13(8,1);*/
+    //lab15(std::pair<double, double>(0, 2), 0.05);
+    int constexpr SIDE = 5;
+    float* arr[] ={ new float[]{0,1,2,3,4},  new float[SIDE] {5,6,7,8,9},  new float[SIDE] {10,11,12,13,15}, new float[SIDE] {16,17,18,19,20}, new float[SIDE] {21,22,23,24,25} };
+    matrix m = matrix(5, arr );
+    m.lab16();
 }
 
 
