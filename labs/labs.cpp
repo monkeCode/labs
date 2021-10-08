@@ -117,6 +117,7 @@ class lab7
 	}
 };
 
+//8, вариант 11
 class lab8
 {
 public:
@@ -330,27 +331,28 @@ void lab15(std::pair<double,double> segment, double step)
 	}
 }
 
+//16 вариант 23
 class matrix
 {
 private:
     float** _matrix;
-    int _side;
 
     float min_in_upper_triangle_matrix()
     {
         float min = _matrix[0][0];
-        for (int i = 0; i < _side; i++)
-            for (int j = i; j < _side; j++)
+        for (int i = 0; i < SIDE; i++)
+            for (int j = i; j < SIDE; j++)
             {
                 min = min > _matrix[i][j] ? _matrix[i][j] : min;
             }
         return min;
     }
+
 	float find_multiple(float lessNumber)
     {
         bool findAnyNumber = false;
         float multiple = 1;
-	    for(int i = 0; i <_side;i++)
+	    for(int i = 0; i <SIDE;i++)
             for (int j = 0; j <=i;j++)
             {
                 if (_matrix[i][j] < lessNumber)
@@ -359,31 +361,39 @@ private:
                     findAnyNumber = true;
                 }
             }
-        //if (!findAnyNumber)
-           // throw "all numbers are greater than a given number";
+        if (!findAnyNumber)
+            throw std::string("all numbers are greater than a given number");
         return  multiple;
     }
 public:
-	matrix(int side, float **m)
+    const int SIDE;
+
+	matrix(const int side, float **m):SIDE(side)
 	{
-        _side = side;
         _matrix = m;
 	}
     void lab16()
 	{
-        for (int i = 0; i < _side; i++)
+        for (int i = 0; i < SIDE; i++)
         {
-            for (int j = 0; j < _side; j++)
+            for (int j = 0; j < SIDE; j++)
             {
-                std::cout << _matrix[i][j] << " ";
+                std::cout << _matrix[i][j] << "\t";
             }
             std::cout << "\n";
         }
-        std::cout << "multiple = " << find_multiple(min_in_upper_triangle_matrix());
+        try 
+        {
+            std::cout << "multiple = " << find_multiple(min_in_upper_triangle_matrix());
+        }
+        catch (std::string ex)
+        {
+            std::cout << ex;
+        }
 	}
  ~matrix()
 	{
-		for(int i =0; i< _side;i++)
+		for(int i =0; i< SIDE;i++)
 		{
             delete _matrix[i];
 		}
@@ -393,24 +403,17 @@ public:
 int main()
 {
 
-   /* for(float x = -100; x<100; x+=0.5 )
-        for(float y = -100; y < 100; y += 0.5)
-    if(lab8::firstMethod(x,y) != lab8::secondMethod(x,y))
-    {
-        std::cout << x << " " << y<<std::endl;
-    }*/
 
 
-    //lab11();
-
-
-    /*lab13(8);
-    std::cout << "\n";
-    lab13(8,1);*/
-    //lab15(std::pair<double, double>(0, 2), 0.05);
-    int constexpr SIDE = 5;
-    float* arr[] ={ new float[]{0,1,2,3,4},  new float[SIDE] {5,6,7,8,9},  new float[SIDE] {10,11,12,13,15}, new float[SIDE] {16,17,18,19,20}, new float[SIDE] {21,22,23,24,25} };
-    matrix m = matrix(5, arr );
+  
+    int constexpr side = 5;
+    float* arr[] ={
+    	new float[] {5,10,20,9,4},
+    	new float[] {5,6,7,8,9},
+    	new float[] {10,11,12,13,15},
+    	new float[] {16,17,18,19,20},
+    	new float[] {21,3,23,2,25} };
+    matrix m = matrix(side, arr );
     m.lab16();
 }
 
