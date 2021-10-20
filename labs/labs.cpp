@@ -115,38 +115,49 @@ float** matrix_console_input(int sideElements)
     return  arr;
 }
 
+class equationSolution
+{
+public:
+	static constexpr float EPSILON = 0.17f;
+
+	static  float get_funcion_result(float x)
+    {
+        return exp(-3 * x) - sin(x) - 1.5;
+    }
+    static float get_derivative(float x)
+	{
+        return (3 + exp(3 * x) * cos(x)) / exp(3 * x);
+	}
+    static float iterative_method(float startX, float e)
+    {
+
+    }
+
+    static float binary_method(float left, float right,float e)
+	{
+        if (get_funcion_result(left) * get_funcion_result(right) >= 0)
+            throw "incorrect";
+        float halfSum = get_funcion_result((left + right) / 2);
+        if (halfSum / get_funcion_result(left) > 0)
+        {
+            left = (left + right) / 2;
+        }
+        else right = (left + right) / 2;
+
+        if (abs(right - left) > e)
+            return binary_method(left, right, e);
+        return get_funcion_result((left + right) / 2);
+	}
+	
+};
+
 int main()
 {
 
 
     srand(time(NULL));
   
-    int constexpr side = 5;
-    /*float* arr[] ={
-       new float[] {5,10,20,9,4},
-       new float[] {5,6,7,8,9},
-       new float[] {10,11,12,13,15},
-       new float[] {16,17,18,19,20},
-       new float[] {21,3,23,2,25} };*/
-
-    /*float* arr[side];
-        for(int i = 0; i< side; i++)
-        {
-            arr[i] = new float[side];
-            for(int a =0; a< side;a++)
-            {
-                arr[i][a] = rand() % 100;
-            }
-        }*/
-
-
-    int sideElements;
-    std::string input;
-    std::getline(std::cin, input);
-    sideElements = std::atoi(input.c_str());
-    matrix m = matrix(sideElements, matrix_console_input(sideElements));
-    std::cout << '\n';
-    m.lab16();
+    std::cout << equationSolution::binary_method(-10,10,0.0001f);
 
 }
 
