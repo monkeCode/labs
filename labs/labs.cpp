@@ -25,7 +25,7 @@ class matrix
 {
 private:
     float** _matrix;
-
+public:
     float min_in_upper_triangle_matrix()
     {
         float min = _matrix[0][0];
@@ -34,7 +34,6 @@ private:
             {
                 min = min > _matrix[i][j] ? _matrix[i][j] : min;
             }
-        std::cout << "min: " << min << "\n";
         return min;
     }
 
@@ -55,12 +54,20 @@ private:
             throw std::string("all numbers are greater than a given number");
         return  multiple;
     }
-public:
+
     const int SIDE;
 
 	matrix(const int side, float **m):SIDE(side)
 	{
-        _matrix = m;
+        _matrix = new float*[side];
+        for(int i =0; i< side; i++)
+        {
+            _matrix[i] = new float[side];
+            for(int a =0;a < side; a++)
+            {
+                _matrix[i][a] = m[i][a];
+            }
+        }
 	}
     void lab16()
 	{
@@ -72,8 +79,11 @@ public:
             }
             std::cout << "\n";
         }
+        float min = min_in_upper_triangle_matrix();
+        std::cout << "min: " << min << "\n";
         try 
         {
+            
             std::cout << "multiple = " << find_multiple(min_in_upper_triangle_matrix());
         }
         catch (std::string ex)
@@ -85,15 +95,15 @@ public:
 	{
 		for(int i =0; i< SIDE;i++)
 		{
-            delete _matrix[i];
+            delete[] _matrix[i];
 		}
-        _matrix = nullptr;
+        delete[] _matrix;
 	}
 };
 
 float** matrix_console_input(int sideElements)
 {
-    std::regex reg = std::regex(R"((\d+\d*([.]\d+)*))");
+    std::regex reg = std::regex(R"(([-]?\d+\d*([.]\d+)*))");
     float** arr = new float* [sideElements];
     for (int i = 0; i < sideElements; i++)
     {
@@ -103,8 +113,10 @@ float** matrix_console_input(int sideElements)
         std::vector<std::string> matches{
             std::sregex_token_iterator{str.begin(), str.end(), reg, 0},
             std::sregex_token_iterator() };
-        if (matches.size() > sideElements)
+
+        if (matches.size() != sideElements)
             throw "too many elements";
+
         float* array = new float[sideElements];
         for (int j = 0; j < sideElements; j++)
         {
@@ -117,11 +129,9 @@ float** matrix_console_input(int sideElements)
 
 int main()
 {
-
-
-    srand(time(NULL));
+    //srand(time(NULL));
   
-    int constexpr side = 5;
+   // int constexpr side = 5;
     /*float* arr[] ={
        new float[] {5,10,20,9,4},
        new float[] {5,6,7,8,9},
@@ -144,7 +154,14 @@ int main()
     std::string input;
     std::getline(std::cin, input);
     sideElements = std::atoi(input.c_str());
-    matrix m = matrix(sideElements, matrix_console_input(sideElements));
+   float **p = matrix_console_input(sideElements);
+    matrix m = matrix(sideElements, p);
+    for(int i = 0; i< sideElements;i++)
+    {
+        delete[] p[i];
+    }
+    delete[] p;
+    p = nullptr;
     std::cout << '\n';
     m.lab16();
 
