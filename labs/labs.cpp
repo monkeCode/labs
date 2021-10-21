@@ -130,34 +130,42 @@ float** matrix_console_input(int sideElements)
 class equationSolution
 {
 public:
-	static constexpr float EPSILON = 0.17f;
+	static constexpr float START_X = -0.17f;
 
-	static  float get_funcion_result(float x)
+	static  float get_function_result(float x)
     {
         return exp(-3 * x) - sin(x) - 1.5;
     }
-    static float get_derivative(float x)
+    static float derivative(float x)
 	{
-        return (3 + exp(3 * x) * cos(x)) / exp(3 * x);
+        return (3+exp(3*x)*cos(x))/exp(3*x);
 	}
-    static float iterative_method(float x, float e)
+    static float g_x(float x)
+	{
+		return x - derivative(1.9) * get_function_result(x);
+	}
+    static float iterative_method(float x, float e, int maxIteration = 1000000)
     {
-	    const float derivativeRes = get_derivative(x);
-        float result = x - 1 / derivativeRes * get_funcion_result(x);
-        while (abs(x - result) > e) 
+        float result = g_x(x);
+        int iter = 0;
+
+        while (abs(x - result) > e && iter < maxIteration) 
         {
             x = result;
-            result = x - 1 / derivativeRes * get_funcion_result(x);
+            result = g_x(x);
+            iter++;
         }
-        return get_funcion_result(x);
+        if(maxIteration != iter)
+        return x;
+        throw std::string("infinity loop");
     }
 
     static float binary_method(float left, float right,float e)
 	{
-        if (get_funcion_result(left) * get_funcion_result(right) >= 0)
-            throw "incorrect";
-        float halfSum = get_funcion_result((left + right) / 2);
-        if (halfSum / get_funcion_result(left) > 0)
+        if (get_function_result(left) * get_function_result(right) >= 0)
+            throw std::string("incorrect");
+        float halfSum = get_function_result((left + right) / 2);
+        if (halfSum / get_function_result(left) > 0)
         {
             left = (left + right) / 2;
         }
@@ -165,7 +173,7 @@ public:
 
         if (abs(right - left) > e)
             return binary_method(left, right, e);
-       // return get_funcion_result((left + right) / 2);
+       // return get_function_result((left + right) / 2);
         return (left + right) / 2;
 	}
 	
@@ -176,10 +184,26 @@ int main()
 
 
     srand(time(NULL));
-  
-    std::cout << equationSolution::binary_method(-1,1,0.001f)<<std::endl;
-    std::cout << equationSolution::iterative_method(-0.1, 0.1f)<<std::endl;
 
+    try 
+    {
+        std::cout << equationSolution::binary_method(-abs(equationSolution::START_X), abs(equationSolution::START_X), 0.01f) << std::endl;
+    }
+    catch (std::string ex)
+    {
+        std::cout << ex << std::endl;
+    }
+    for (int i = 1; i < 30; i ++)
+    {
+        try
+        {
+            std::cout <<"x= "<<i<<" result = "<< equationSolution::iterative_method(i, 0.1) << std::endl;
+        }
+        catch (std::string ex)
+        {
+            std::cout << ex<<std::endl;
+        }
+    }
 
 }
 
