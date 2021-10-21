@@ -197,7 +197,7 @@ int main()
     {
         try
         {
-            std::cout <<"x= "<<i<<" result = "<< equationSolution::iterative_method(i, 0.1) << std::endl;
+            std::cout <<"x= "<<i<<" result = "<< equationSolution::iterative_method(i, 0.01) << std::endl;
         }
         catch (std::string ex)
         {
