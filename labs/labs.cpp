@@ -140,9 +140,16 @@ public:
 	{
         return (3 + exp(3 * x) * cos(x)) / exp(3 * x);
 	}
-    static float iterative_method(float startX, float e)
+    static float iterative_method(float x, float e)
     {
-
+	    const float derivativeRes = get_derivative(x);
+        float result = x - 1 / derivativeRes * get_funcion_result(x);
+        while (abs(x - result) > e) 
+        {
+            x = result;
+            result = x - 1 / derivativeRes * get_funcion_result(x);
+        }
+        return get_funcion_result(x);
     }
 
     static float binary_method(float left, float right,float e)
@@ -158,7 +165,8 @@ public:
 
         if (abs(right - left) > e)
             return binary_method(left, right, e);
-        return get_funcion_result((left + right) / 2);
+       // return get_funcion_result((left + right) / 2);
+        return (left + right) / 2;
 	}
 	
 };
@@ -169,7 +177,9 @@ int main()
 
     srand(time(NULL));
   
-    std::cout << equationSolution::binary_method(-10,10,0.0001f);
+    std::cout << equationSolution::binary_method(-1,1,0.001f)<<std::endl;
+    std::cout << equationSolution::iterative_method(-0.1, 0.1f)<<std::endl;
+
 
 }
 
