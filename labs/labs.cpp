@@ -230,9 +230,28 @@ namespace lab18
 		return 0;
 	}
 }
+
+int lab19(int number)
+{
+	if (number > 2)
+		return lab19(number - 1) + lab19(number - 2);
+	return 1;
+}
+
+int lab19_2(int number)
+{
+	std::vector<int> numbes{1,1};
+	if (number <= 2)
+		return 1;
+	while (numbes.size() < number)
+	{
+		numbes.push_back(*(numbes.end() - 1) +  *(numbes.end() - 2));
+	}
+	return numbes[number - 1];
+}
 int main()
 {
-	lab18::compare_function_type predic = lab18::Compare<int>;
+	/*lab18::compare_function_type predic = lab18::Compare<int>;
 	int arr[]{ 1,2,3,4,5,1 };
 
 	std::cout << lab18::find_minimum(std::begin(arr), std::end(arr), predic) << std::endl;
@@ -240,5 +259,7 @@ int main()
 	for (auto i : arr)
 	{
 		std::cout << i << std::endl;
-	}
+	}*/
+	std::cout << lab19(2) << std::endl;
+	std::cout << lab19_2(2);
 }
