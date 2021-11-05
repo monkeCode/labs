@@ -231,23 +231,47 @@ namespace lab18
 	}
 }
 
-int lab19(int number)
+namespace lab19
 {
-	if (number > 2)
-		return lab19(number - 1) + lab19(number - 2);
-	return 1;
-}
-
-int lab19_2(int number)
-{
-	std::vector<int> numbes{1,1};
-	if (number <= 2)
-		return 1;
-	while (numbes.size() < number)
+	std::vector<int> numbes{ 1,1 };
+	int recursive(int number)
 	{
-		numbes.push_back(*(numbes.end() - 1) +  *(numbes.end() - 2));
+		if (numbes.size() >= number)
+			return numbes[number - 1];
+		numbes.push_back(recursive(number - 2) + recursive(number - 1));
+		return recursive(number - 1) + recursive(number - 2);
 	}
-	return numbes[number - 1];
+
+	int iterative(int number)
+	{
+		while (numbes.size() < number)
+		{
+			numbes.push_back(*(numbes.end() - 1) + *(numbes.end() - 2));
+		}
+		return numbes[number - 1];
+	}
+}
+struct complex
+{
+	double first;
+	double second;
+	complex(double first, double second)
+	{
+		this->first = first;
+		this->second = second;
+	}
+	bool operator <(complex& c)
+	{
+		return (first + second) < (c.first + c.second);
+	}
+	bool operator>(complex& c)
+	{
+		return (first + second) > (c.first + c.second);
+	}
+};
+
+void BubbleSort(complex* startP, complex* endP)
+{
 }
 int main()
 {
@@ -260,6 +284,6 @@ int main()
 	{
 		std::cout << i << std::endl;
 	}*/
-	std::cout << lab19(2) << std::endl;
-	std::cout << lab19_2(2);
+	std::cout << lab19::recursive(7) << std::endl;
+	std::cout << lab19::iterative(3);
 }
