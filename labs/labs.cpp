@@ -231,26 +231,39 @@ namespace lab18
 	}
 }
 
-namespace lab19
+class fibonacci
 {
-	std::vector<int> numbes{ 1,1 };
+	std::vector<int> _numbers{ 1,1 };
+
 	int recursive(int number)
 	{
-		if (numbes.size() >= number)
-			return numbes[number - 1];
-		numbes.push_back(recursive(number - 2) + recursive(number - 1));
+		if (_numbers.size() > number)
+			return _numbers[number];
+		_numbers.push_back(recursive(number - 2) + recursive(number - 1));
 		return recursive(number - 1) + recursive(number - 2);
 	}
 
 	int iterative(int number)
 	{
-		while (numbes.size() < number)
+		while (_numbers.size() <= number)
 		{
-			numbes.push_back(*(numbes.end() - 1) + *(numbes.end() - 2));
+			_numbers.push_back(*(_numbers.end() - 1) + *(_numbers.end() - 2));
 		}
-		return numbes[number - 1];
+		return _numbers[number];
 	}
-}
+public:
+	int operator[](const int index)
+	{
+		if (index < 0)
+			throw std::exception("less than zero");
+#if _DEBUG
+		std::cout << recursive(index)<<'\n';
+		std::cout << iterative(index) << std::endl;
+#endif
+
+		return recursive(index);
+	}
+};
 struct complex
 {
 	double first;
@@ -284,6 +297,7 @@ int main()
 	{
 		std::cout << i << std::endl;
 	}*/
-	std::cout << lab19::recursive(7) << std::endl;
-	std::cout << lab19::iterative(3);
+
+	fibonacci f = fibonacci();
+	f[1];
 }
