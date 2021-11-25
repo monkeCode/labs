@@ -478,3 +478,38 @@
             return (left + right) / 2;
         }
     };
+    class fibonacci
+    {
+    private:
+        std::vector<long> _numbers{ 1,1 };
+
+        long recursive(int number)
+        {
+            if (_numbers.size() > number)
+                return _numbers[number];
+            _numbers.push_back(recursive(number - 2) + recursive(number - 1));
+            return _numbers[number];
+        }
+
+        long iterative(int number)
+        {
+            while (_numbers.size() <= number)
+            {
+                _numbers.push_back(*(_numbers.end() - 1) + *(_numbers.end() - 2));
+            }
+            return _numbers[number];
+        }
+    public:
+        int operator[](const int index)
+        {
+            if (index < 0)
+                throw std::exception("less than zero");
+#if _DEBUG
+            std::cout << "recursive: " << recursive(index) << '\n';
+            _numbers = { 1,1 };
+            std::cout << "iterative: " << iterative(index) << std::endl;
+#endif
+
+            return recursive(index);
+        }
+    };

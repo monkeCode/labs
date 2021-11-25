@@ -78,8 +78,8 @@ namespace lab18
 		for (int offset = 0; startIter + offset != endIter ; offset++)
 		{
 			int index = find_index(nowIterate, endIter, comparator);
-			//swap((void*) nowIterate[index], (void*)(nowIterate), sizeof(nowIterate));
-			std::swap(*(nowIterate+index), *nowIterate);
+			swap((void*) (nowIterate + index), (void*)(nowIterate), sizeof(nowIterate));
+			//std::swap(*(nowIterate+index), *nowIterate);
 			nowIterate = startIter + offset+1;
 		}
 	}
@@ -102,68 +102,191 @@ namespace lab18
 	}
 }
 
-class fibonacci
+class sorts
 {
-	std::vector<int> _numbers{ 1,1 };
-
-	int recursive(int number)
+private:
+	static void insert(int arr[], int left, int right)
 	{
-		if (_numbers.size() > number)
-			return _numbers[number];
-		_numbers.push_back(recursive(number - 2) + recursive(number - 1));
-		return recursive(number - 1) + recursive(number - 2);
-	}
-
-	int iterative(int number)
-	{
-		while (_numbers.size() <= number)
+		for (int i = left; i < right; i++)
 		{
-			_numbers.push_back(*(_numbers.end() - 1) + *(_numbers.end() - 2));
+			std::swap(arr[i], arr[right]);
 		}
-		return _numbers[number];
+	}
+	static int find_minimum(int* arr, int len)
+	{
+		int minIndex = 0;
+		int minVal = arr[0];
+		for (int i = 1; i < len; i++)
+		{
+			if (minVal > arr[i])
+			{
+				minIndex = i;
+				minVal = arr[i];
+			}
+		}
+		return minIndex;
 	}
 public:
-	int operator[](const int index)
+	static void insertion_sort(int input_arr[], int len)
 	{
-		if (index < 0)
-			throw std::exception("less than zero");
-#if _DEBUG
-		std::cout << recursive(index)<<'\n';
-		std::cout << iterative(index) << std::endl;
-#endif
-
-		return recursive(index);
+		for (int i = 0; i < len; i++)
+		{
+			for (int a = 0; a < i; a++)
+			{
+				if (input_arr[a] >= input_arr[i])
+				{
+					insert(input_arr, a, i);
+				}
+			}
+		}
+	}
+	static void bubble_sort(int input_arr[], int len)
+	{
+		for (int i = 0; i < len - 1; i++)
+		{
+			for (int a = 0; a < len-i-1; a++)
+				if (input_arr[a+1] < input_arr[a])
+					std::swap(input_arr[a], input_arr[a+1]);
+		}
+	}
+	static void selection_sort(int input_arr[], int len)
+	{
+		for (int i = 0; i < len - 1; i++)
+		{
+			int index =	find_minimum(&input_arr[i], len - i);
+			std::swap(input_arr[i], input_arr[index+i]);
+		}
 	}
 };
-
-namespace sorts
+__interface ICounter
 {
-
-}
+	public:
+	ICounter* compare_count();
+	ICounter* copy_count();
+};
+class simple_counter: public ICounter
+{
+private:
+	unsigned long long compare_counter;
+	unsigned long long copy_counter;
+public:
+	simple_counter()
+	{
+		copy_counter = 0;
+		compare_counter = 0;
+	}
+	ICounter* compare_count()
+	{
+		compare_counter++;
+		return this;
+	}
+	ICounter* copy_count()
+	{
+		copy_counter++;
+		return this;
+	}
+	long long get_compares()
+	{
+		return (long long)compare_counter;
+	}
+	long long get_copies()
+	{
+		return (long long)copy_counter;
+	}
+};
 struct complex
 {
 	double first;
 	double second;
-	static unsigned long long compare_count;
-	static unsigned long long copy_counter;
+	complex()
+	{
+		first = 0;
+		second = 0;
+	}
 	complex(double first, double second)
 	{
 		this->first = first;
 		this->second = second;
 	}
-	bool operator <(complex& c)
+	static complex generate_complex()
 	{
-		return (first + second) < (c.first + c.second);
+		return complex((double)rand() /RAND_MAX*100 , (double)rand() / RAND_MAX * 100);
 	}
-	bool operator>(complex& c)
+	complex operator+(complex& c1)
 	{
-		return (first + second) > (c.first + c.second);
+		return complex(c1.first + first, c1.second + second);
 	}
-
-	static void BubbleSort(complex* startP, complex* endP)
+};
+class matrix
+{
+private:
+	complex _m[2][2];
+	double norm;
+	double set_norm()
 	{
-		complex* iterP = startP;
-		complex* startIteration = startP;
+		complex sum = complex(0,0);
+		for (int i = 0; i < 2; i++)
+			for (int a = 0; a < 2; a++)
+			{
+				sum = sum + _m[i][a];
+			}
+		return sqrt(pow(sum.first,2) + pow(sum.second, 2));
+	}
+public:
+	matrix(complex **inputMatrix)
+	{
+		for (int i = 0; i < 2; i++)
+			for (int a = 0; a < 2; a++)
+				_m[i][a] = inputMatrix[i][a];
+		norm = set_norm();
+	}
+	matrix()
+	{
+		for (int i = 0; i < 2; i++)
+			for (int a = 0; a < 2; a++)
+				_m[i][a] = complex::generate_complex();
+		norm = set_norm();
+	}
+	double get_norm()
+	{
+		return norm;
+	}
+	void outputMatrix()
+	{
+		for (int i = 0; i < 2; i++)
+		{
+			for (int a = 0; a < 2; a++)
+				std::cout << "(" << _m[i][a].first << " " << _m[i][a].second << ") ";
+			std::cout << std::endl;
+		}
+		std::cout << "norm: " << norm << "\n\n";
+	}
+	bool operator<(matrix& m)
+	{
+		return norm < m.get_norm();
+	}
+	bool operator>(matrix& m)
+	{
+		return norm > m.get_norm();
+	}
+};
+class matrixHandler
+{
+private:
+	 ICounter* _counter;
+public:
+	matrixHandler(ICounter* ic)
+	{
+		set_counter(ic);
+	}
+	 void set_counter(ICounter *ic)
+	{
+		_counter = ic;
+	}
+	  void BubbleSort(matrix* startP, matrix* endP)
+	{
+		matrix* iterP = startP;
+		matrix* startIteration = startP;
 		for (int i = 0; startP != endP - 1; startP++, i++)
 		{
 			for (; iterP != endP - 1 - i; iterP++)
@@ -171,16 +294,19 @@ struct complex
 				if (*iterP < *(iterP + 1))
 				{
 					std::swap(*iterP, *(iterP + 1));
+					 _counter->copy_count()->copy_count()->copy_count();
 				}
+				_counter->compare_count();
 			}
 			iterP = startIteration;
 		}
 	}
+		
 };
 int main()
 {
-	//18 лаба
-	lab18::compare_function_type predic = lab18::compare<int>;
+	/*18 лаба*/
+	/*lab18::compare_function_type predic = lab18::reverce<float>;
 	int len;
 	std::cin >> len;
 	float *arr = new float[len];
@@ -190,19 +316,22 @@ int main()
 	lab18::selection_sort(arr, arr+len, predic);
 	lab18::output(arr, len, std::cout);
 	delete[] arr;
-	arr = nullptr;
-
-
-	//19 лаба
-	//fibonacci f = fibonacci();
-	//f[1];
-
+	arr = nullptr;*/
 
 	//20 лаба
-	//complex arr[] = { complex(1,3), complex(3,3), complex(1,1), complex(5,5), complex(0,0) };
-	//complex::BubbleSort(std::begin(arr), std::end(arr));	//O(n^2)
-	//for (auto a : arr)
-	//{
-	//	std::wcout << a.first << " " << a.second << "\n";
-	//}
+	matrix mArray[20];
+	simple_counter counter = simple_counter();
+	ICounter* ic = &counter;
+	matrixHandler mx = matrixHandler(ic);
+	mx.BubbleSort(std::begin(mArray), std::end(mArray));
+	std::cout << counter.get_compares() << " " << counter.get_copies() << "\n";
+	for (auto a : mArray)
+	{
+		a.outputMatrix();
+	}
+
+	int arr[]{ 5,3,67,2,0,2434,565,-3454 };
+	sorts::insertion_sort(arr, std::size(arr));
+	for (int i = 0; i < std::size(arr); i++)
+		std::cout << arr[i]<<" ";
 }
