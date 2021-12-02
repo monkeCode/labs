@@ -13,9 +13,9 @@ void lab15()
 {
 	float n;
 	std::cin >> n;
-	float firstArr[]{ 5656,45,-5454,1.45,0 };
+	float firstArr[]{ 34,45,-32,1.45,0,1,5,8,3,2,2,2,2,2,9 };
 	float secontArr[]{ 8,6,5,4,3,2,2,1,0 };
-	auto iter = std::remove_if(std::begin(firstArr), std::end(firstArr), [n](float f) { return f > n; });
+	auto iter = std::remove_if(std::begin(firstArr), std::end(firstArr), [n](float f) { return abs(f) > n; });
 	int len = iter - firstArr-1;
 	int arraySize = len + std::size(secontArr) + 1;
 	float* resultArr = new float[arraySize];
@@ -32,6 +32,7 @@ void lab15()
 	{
 		std::cout << resultArr[i]<<" ";
 	}
+	delete[] resultArr;
 }
 
 const int ARRAY_LENGTH = 100000;
