@@ -143,6 +143,7 @@
     <ClCompile Include="oldLabClass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="labs.h" />
     <ClInclude Include="oldLabClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
