@@ -8,14 +8,29 @@
 #include<regex>
 #include "labs.h"
 
-//лаба 15, 23 вариант
-void lab15(std::pair<double, double> segment, double step)
+//лаба 15, Поместить элементы массива X в начало массива Y в обратном порядке, исключив элементы, превосходящие по абсолютной величине вводимое значение R.
+void lab15()
 {
-	double args[12];
-	int i = 0;
-	for (double x = segment.first; x <= segment.second, i < 12; x += step)
+	float n;
+	std::cin >> n;
+	float firstArr[]{ 5656,45,-5454,1.45,0 };
+	float secontArr[]{ 8,6,5,4,3,2,2,1,0 };
+	auto iter = std::remove_if(std::begin(firstArr), std::end(firstArr), [n](float f) { return f > n; });
+	int len = iter - firstArr-1;
+	int arraySize = len + std::size(secontArr) + 1;
+	float* resultArr = new float[arraySize];
+	for (int i = 0; i < arraySize; i++)
 	{
-		std::cout << exp(-x / 3) * pow(sin(5 * x), 2) << std::endl;
+		if (i <= len)
+			resultArr[i] = firstArr[len - i];
+		else
+		{
+			resultArr[i] = secontArr[i - len-1];
+		}
+	}
+	for (int i = 0; i < arraySize; i++)
+	{
+		std::cout << resultArr[i]<<" ";
 	}
 }
 
@@ -114,7 +129,7 @@ void Output3Darray(int*** arr, int height, int width, int depth)
 }
 int main()
 {
-	int height = 2;
+	/*int height = 2;
 	int width = 3;
 	int depth = 2;
 
@@ -124,5 +139,7 @@ int main()
 	std::cout << '\n';
 	Input3DDynamicArray(arr, height, width, depth);
 	Output3Darray(arr, height, width, depth);
-	FreeMemory(arr, height, width, depth);
+	FreeMemory(arr, height, width, depth);*/
+
+	lab15();
 }
