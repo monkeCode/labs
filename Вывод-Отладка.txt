@@ -1,0 +1,15 @@
+﻿"labs.exe" (Win32). Загружено "C:\Users\georg\source\repos\labs\x64\Debug\labs.exe". Символы загружены.
+"labs.exe" (Win32). Загружено "C:\Windows\System32\ntdll.dll". 
+"labs.exe" (Win32). Загружено "C:\Windows\System32\kernel32.dll". 
+"labs.exe" (Win32). Загружено "C:\Windows\System32\KernelBase.dll". 
+"labs.exe" (Win32). Загружено "C:\Windows\System32\msvcp140d.dll". 
+"labs.exe" (Win32). Загружено "C:\Windows\System32\vcruntime140d.dll". 
+"labs.exe" (Win32). Загружено "C:\Windows\System32\vcruntime140_1d.dll". 
+"labs.exe" (Win32). Загружено "C:\Windows\System32\ucrtbased.dll". 
+Поток 0x1420 завершился с кодом 0 (0x0).
+"labs.exe" (Win32). Загружено "C:\Windows\System32\kernel.appcore.dll". 
+"labs.exe" (Win32). Загружено "C:\Windows\System32\msvcrt.dll". 
+"labs.exe" (Win32). Загружено "C:\Windows\System32\rpcrt4.dll". 
+Поток 0xcf8 завершился с кодом 0 (0x0).
+Поток 0x27c8 завершился с кодом 0 (0x0).
+Программа "[11712] labs.exe" завершилась с кодом 0 (0x0).

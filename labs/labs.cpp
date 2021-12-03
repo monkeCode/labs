@@ -158,11 +158,12 @@ public:
 		}
 	}
 };
-__interface ICounter
+class ICounter
 {
 	public:
-	ICounter* compare_count();
-	ICounter* copy_count();
+	virtual ICounter* compare_count() = NULL;
+	virtual ICounter* copy_count() = NULL;
+	virtual ~ICounter() {};
 };
 class simple_counter: public ICounter
 {
@@ -175,12 +176,12 @@ public:
 		copy_counter = 0;
 		compare_counter = 0;
 	}
-	ICounter* compare_count()
+	ICounter* compare_count() override
 	{
 		compare_counter++;
 		return this;
 	}
-	ICounter* copy_count()
+	ICounter* copy_count() override
 	{
 		copy_counter++;
 		return this;
@@ -210,7 +211,8 @@ struct complex
 	}
 	static complex generate_complex()
 	{
-		return complex((double)rand() /RAND_MAX*100 , (double)rand() / RAND_MAX * 100);
+		auto d = []() {return (double)rand() / RAND_MAX * 100; };
+		return complex(d(), d());
 	}
 	complex operator+(complex& c1)
 	{
@@ -305,33 +307,23 @@ public:
 };
 int main()
 {
-	/*18 лаба*/
-	/*lab18::compare_function_type predic = lab18::reverce<float>;
-	int len;
-	std::cin >> len;
-	float *arr = new float[len];
-	lab18::input_arr(arr, len, std::cin);
-	int index = lab18::find_index(arr, arr + len, predic);
-	std::cout <<"index: "<< index<<" result: " <<arr[index] << std::endl;
-	lab18::selection_sort(arr, arr+len, predic);
-	lab18::output(arr, len, std::cout);
-	delete[] arr;
-	arr = nullptr;*/
-
 	//20 лаба
+	/*int arr[]{ 5,3,67,2,0,2434,565,-3454 };
+	sorts::selection_sort(arr, std::size(arr));
+	for (int i = 0; i < std::size(arr); i++)
+		std::cout << arr[i] << " ";
+	std::cout << std::endl;*/
+	
 	matrix mArray[20];
 	simple_counter counter = simple_counter();
 	ICounter* ic = &counter;
 	matrixHandler mx = matrixHandler(ic);
 	mx.BubbleSort(std::begin(mArray), std::end(mArray));
-	std::cout << counter.get_compares() << " " << counter.get_copies() << "\n";
+	std::cout <<"Compares: "<< counter.get_compares() << " Copies: " << counter.get_copies() <<
+		"\nCopy size: "<<sizeof(matrix)<<std::endl;
 	for (auto a : mArray)
 	{
 		a.outputMatrix();
 	}
-
-	int arr[]{ 5,3,67,2,0,2434,565,-3454 };
-	sorts::insertion_sort(arr, std::size(arr));
-	for (int i = 0; i < std::size(arr); i++)
-		std::cout << arr[i]<<" ";
+	
 }
