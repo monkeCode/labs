@@ -7,6 +7,7 @@
 #include <vector>
 #include<regex>
 #include "labs.h"
+#include"lab1.h"
 #include<fstream>
 #include<list>
 //lab 2, 23
@@ -98,8 +99,24 @@ struct city
 	{
 		this->name = name;
 		population = pop;
-	}
 };
+	void commit_random_trips(std::vector<vehicle*>& vehicles)
+	{
+		for (int i = 0; i < vehicles.size(); ++i) {
+			double randomDistance = double(rand() % 20001) / 10.;
+			vehicles[i]->make_trip(randomDistance);
+		}
+		void output_vehicle(std::vector<vehicle*> v)
+		{
+			std::ifstream file = std::ifstream("cities");
+			std::list<city> cities = std::list<city>();
+			city* ct = new city("", 1);
+			while (!file.eof())
+				std::cout << "Name\tSpeed\tDist\tTime\n";
+			for (auto veh : v)
+			{
+				std::cout << veh->get_name() << '\t' << veh->get_speed() << '\t' << veh->get_total_distance() << '\t' << veh->get_total_time() << std::endl;
+			}
 void add_city(city ct)
 {
 	std::ofstream file = std::ofstream("cities", std::ofstream::app);
@@ -107,12 +124,7 @@ void add_city(city ct)
 	file.close();
 }
 std::list<city> get_cities(int left, int right)
-{
-	std::ifstream file = std::ifstream("cities");
-	std::list<city> cities = std::list<city>();
-	city *ct = new city("", 1);
-	while (!file.eof())
-	{
+
 		file.read((char*)ct, sizeof(city));
 		cities.push_back(*ct);
 	}
@@ -121,6 +133,16 @@ std::list<city> get_cities(int left, int right)
 }
 int main()
 {
+	/*srand(time(0));
+	std::vector<vehicle*> vehicles = std::vector<vehicle*>();
+	coach c = coach("test", 5);
+	automobile a = automobile("auto", 300);
+	aeroplane plane = aeroplane("boing", 1000);
+	vehicles.push_back(&c);
+	vehicles.push_back(&a);
+	vehicles.push_back(&plane);
+	commit_random_trips(vehicles);
+	output_vehicle(vehicles);*/
 	//add_city(city("chicago2", 200));
 	//add_city(city("chicago3", 300));
 	get_cities(1, 1);
