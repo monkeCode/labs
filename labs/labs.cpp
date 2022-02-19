@@ -7,140 +7,122 @@
 #include <vector>
 #include<regex>
 #include "labs.h"
-
-//лаба 15, Поместить элементы массива X в начало массива Y в обратном порядке, исключив элементы, превосходящие по абсолютной величине вводимое значение R.
-void lab15()
+#include<fstream>
+#include<list>
+//lab 2, 23
+struct user
 {
-	float n;
-	std::cin >> n;
-	float firstArr[]{ 34,45,-32,1.45,0,1,5,8,3,2,2,2,2,2,9 };
-	float secontArr[]{ 8,6,5,4,3,2,2,1,0 };
-	auto iter = std::remove_if(std::begin(firstArr), std::end(firstArr), [n](float f) { return abs(f) > n; });
-	int len = iter - firstArr-1;
-	int arraySize = len + std::size(secontArr) + 1;
-	float* resultArr = new float[arraySize];
-	for (int i = 0; i < arraySize; i++)
+public:
+	enum phone_type { home, office };
+	std::string lastName;
+	std::string phoneNumber;
+	phone_type phoneType;
+
+	user(std::string lastName, std::string phoneNum, phone_type type)
 	{
-		if (i <= len)
-			resultArr[i] = firstArr[len - i];
-		else
-		{
-			resultArr[i] = secontArr[i - len-1];
-		}
+		this->lastName = lastName;
+		phoneNumber = phoneNum;
+		phoneType = type;
 	}
-	for (int i = 0; i < arraySize; i++)
+	bool operator<(const user& us)
 	{
-		std::cout << resultArr[i]<<" ";
+		return phoneType < us.phoneType;
 	}
-	delete[] resultArr;
-}
-
-const int ARRAY_LENGTH = 100000;
-const int ARRAY_HEIGHT = 100;
-const int ARRAY_WIDTH = 200;
-//Функция работает с массивами произвольной длины (универсальна)
-void Zero1DArray(char my_1d_array[], int length) {
-	for (int index = 0; index < length; ++index) {
-		my_1d_array[index] = 0;
+	bool operator>(const user& us)
+	{
+		return phoneType > us.phoneType;
 	}
-	return;
-}
-//Эта функция работает только с массивами массивов длины ARRAY_WIDTH (не универсальна!)
-void Zero2DStaticArray(char my_2d_array[][ARRAY_WIDTH], int height, int width) {
-	for (int row_index = 0; row_index < height; ++row_index) {
-		for (int column_index = 0; column_index < width; ++column_index) {
-			my_2d_array[row_index][column_index] = 0;
-		}
-	}
-	return;
-}
-//Функция работает с массивами произвольной длины, но не может принять на вход статический массив.
-//Она принимает на вход массив указателей на числа.
-void Zero2DDynamicArray(char** my_2d_array, int height, int width) {
-	for (int row_index = 0; row_index < height; ++row_index) {
-		for (int column_index = 0; column_index < width; ++column_index) {
-			my_2d_array[row_index][column_index] = 0;
-		}
-	}
-	return;
-}
-//Функция работает с двумерными статическими массивами произвольных размеров
-void Zero2DStaticArrayUniversal(char my_2d_array[], int height, int width) {
-	for (int row_index = 0; row_index < height; ++row_index) {
-		for (int column_index = 0; column_index < width; ++column_index) {
-			my_2d_array[row_index * width + column_index] = 0;
-		}
-	}
-	return;
-}
-
-void Input3DStaticArray(int my_3d_array[], int height, int width, int depth) {
-	for (int row_index = 0; row_index < height; ++row_index) {
-		for (int column_index = 0; column_index < width; ++column_index) {
-			for (int depth_index = 0; depth_index < depth; ++depth_index) {
-				std::cin>> my_3d_array[(row_index * width + column_index) * depth +
-					depth_index];
-			}
-		}
-	}
-}
-void Input3DDynamicArray(int*** my_3d_array, int height, int width, int depth) {
-	for (int row_index = 0; row_index < height; ++row_index) {
-		for (int column_index = 0; column_index < width; ++column_index) {
-			for (int depth_index = 0; depth_index < depth; ++depth_index) {
-				std::cin>> my_3d_array[row_index][column_index][depth_index];
-			}
-		}
-	}
-}
-
-int*** AllocateMemory(int height, int width, int depth)
+};
+std::string fileName = "base_users.txt";
+std::string secondFileName = "base_users2.txt";
+std::list<user> load_users()
 {
-	int* dataBlock = new int[height * width * depth];
-	int** firstPointersBlock = new int* [height * width];
-	int*** arr = new int** [height];
-	for (int i = 0; i < height; i++)
+	std::ifstream file = std::ifstream(fileName);
+	std::list<user> users = std::list<user>();
+	while (file.good())
 	{
-		arr[i] = &firstPointersBlock[i*width];
-		//arr[i] = new int* [width];
-		for (int j = 0; j < width; j++)
-			arr[i][j] = &dataBlock[(i * width + j) * depth];
+		std::string lastname;
+		std::string phone;
+		int code;
+		file >> lastname;
+		file >> phone;
+		file >> code;
+		auto user = user::user(lastname, phone, (user::phone_type)code);
+		users.push_back(user);
 	}
-	return arr;
+	file.close();
+	return users;
+
+}
+void add_user(std::string lastname, std::string phone, user::phone_type code)
+{
+	std::ofstream file = std::ofstream(fileName, std::ios_base::app);
+	file << lastname << " " << phone << " " << code << "\n";
+	file.close();
+}
+void add_user(user us)
+{
+	add_user(us.lastName, us.phoneNumber, us.phoneType);
 }
 
-void FreeMemory(int*** arr, int height, int width, int depth)
+void update_second_file(char ch[])
 {
-	delete[] &arr[0][0][0];
-	delete[] & arr[0][0];
-	/*for (int i = 0; i < height; i++)
+	std::list<user> users = load_users();
+
+		auto removeIter = std::remove_if(users.begin(), users.end(), [ch](user us)
+			{
+				for (char* c = ch; *c; c++)
+				{
+					if (us.lastName[0] == *c)
+						return false;
+				}
+				return true;
+			});
+		users.erase(removeIter, users.end());
+	users.sort();
+
+	std::ofstream file = std::ofstream(secondFileName);
+	for(auto us : users)
 	{
-		delete[] arr[i];
-	}*/
-	delete[] arr;
-
+		file << us.lastName << " " << us.phoneNumber << " " << (int)us.phoneType << "\n";
+	}
+	file.close();
 }
-void Output3Darray(int*** arr, int height, int width, int depth)
-{
 
-	for (int i = 0; i < height; i++)
-		for (int j = 0; j < width; j++)
-			for (int k = 0; k < depth; k++)
-				std::cout << (**arr)[(i * width + j) * depth + k] << " ";
+//lab 3, 23
+struct city
+{
+	std::string name;
+	int population;
+	city(std::string name, int pop)
+	{
+		this->name = name;
+		population = pop;
+	}
+};
+void add_city(city ct)
+{
+	std::ofstream file = std::ofstream("cities", std::ofstream::app);
+	file.write((char*)&ct, sizeof(city));
+	file.close();
+}
+std::list<city> get_cities(int left, int right)
+{
+	std::ifstream file = std::ifstream("cities");
+	std::list<city> cities = std::list<city>();
+	city *ct = new city("", 1);
+	while (!file.eof())
+	{
+		file.read((char*)ct, sizeof(city));
+		cities.push_back(*ct);
+	}
+	file.close();
+	return cities;
 }
 int main()
 {
-	/*int height = 2;
-	int width = 3;
-	int depth = 2;
+	//add_city(city("chicago2", 200));
+	//add_city(city("chicago3", 300));
+	get_cities(1, 1);
 
-	auto arr = AllocateMemory(height, width, depth);
-	Input3DStaticArray(&arr[0][0][0], height, width, depth);
-	Output3Darray(arr, height, width, depth);
-	std::cout << '\n';
-	Input3DDynamicArray(arr, height, width, depth);
-	Output3Darray(arr, height, width, depth);
-	FreeMemory(arr, height, width, depth);*/
-
-	lab15();
 }
