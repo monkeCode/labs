@@ -1,8 +1,0 @@
-name phone 1
-lol lol2 0
-lol lol2 0
-aaa +7917 1
-bbb +7918 0
-ccc +7919 1
-ddd +7920 0
-eee +7921 1
