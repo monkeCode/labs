@@ -1,4 +1,5 @@
 ﻿#define _USE_MATH_DEFINES
+#define _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS 1
 #include <iostream>
 #include <string>
 #include<numeric>
@@ -9,6 +10,7 @@
 #include"lab1.h"
 #include<fstream>
 #include<list>
+#include<hash_map>
 //lab 2, 23
 struct user
 {
@@ -187,6 +189,63 @@ void add_city(city ct)
 }
 
 
+class vehicle_handler
+{
+private:
+	std::vector<coach*> coaches;
+	std::vector<automobile*> automobiles;
+	std::vector<aeroplane*> aeroplanes;
+	std::vector<electric_car*> electric;
+	std::vector<petrol_car*> petrol;
+	void output_vehicle(std::vector<vehicle*>& v)
+	{
+
+		std::cout << "Name\tSpeed\tDist\tTime\n";
+		for (auto veh : v)
+		{
+			std::cout << veh->get_name() << '\t' << veh->get_speed() << '\t' << veh->get_total_distance() << '\t' << veh->get_total_time() << std::endl;
+		}
+	}
+public: 
+	void add(coach* v)
+	{
+		coaches.push_back(v);
+	}
+	void add(automobile* v)
+	{
+		automobiles.push_back(v);
+	}
+	void add(aeroplane* v)
+	{
+		aeroplanes.push_back(v);
+	}
+	void add(electric_car* v)
+	{
+		electric.push_back(v);
+	}
+	void add(petrol_car* v)
+	{
+		petrol.push_back(v);
+	}
+	std::vector<vehicle*> get_all()
+	{
+		std::vector<vehicle*> vehicles;
+		vehicles.insert(vehicles.end(), coaches.begin(), coaches.end());
+		vehicles.insert(vehicles.end(), aeroplanes.begin(), aeroplanes.end());
+		vehicles.insert(vehicles.end(), automobiles.begin(), automobiles.end());
+		vehicles.insert(vehicles.end(), electric.begin(), electric.end());
+		return vehicles;
+	}
+	void output_all()
+	{
+		auto vehicles = get_all();
+		vehicles.insert(vehicles.end(), petrol.begin(), petrol.end());
+		std::sort(vehicles.begin(), vehicles.end());
+
+		output_vehicle(vehicles);
+	}
+	
+};
 void commit_random_trips(std::vector<vehicle*>& vehicles)
 {
 	for (int i = 0; i < vehicles.size(); ++i) {
@@ -194,52 +253,55 @@ void commit_random_trips(std::vector<vehicle*>& vehicles)
 		vehicles[i]->make_trip(randomDistance);
 	}
 }
-void output_vehicle(std::vector<vehicle*> v)
-{
-	std::cout << "Name\tSpeed\tDist\tTime\n";
-	for (auto veh : v)
-	{
-		std::cout << veh->get_name() << '\t' << veh->get_speed() << '\t' << veh->get_total_distance() << '\t' << veh->get_total_time() << std::endl;
-	}
-}
+
 void lab1()
 {
-	std::vector<vehicle*> vehicles = std::vector<vehicle*>();
-	coach c = coach("test", 5);
-	automobile a = automobile("auto", 300);
-	aeroplane plane = aeroplane("boing", 1000);
-	vehicles.push_back(&c);
-	vehicles.push_back(&a);
-	vehicles.push_back(&plane);
-	commit_random_trips(vehicles);
-	output_vehicle(vehicles);
+	vehicle_handler handler;
+	auto a = electric_car();
+	handler.add(&a);
+	aeroplane plane = aeroplane();
+	handler.add(&plane);
+	auto vec = handler.get_all();
+	commit_random_trips(vec);
+	handler.output_all();
 }
 //вариантн 5
 namespace lab4
 {
 	const std::string START_FILE = "lab4_1.txt";
 	const std::string END_FILE = "lab4_2.txt";
-	std::list<std::string> get_words()
+	std::vector<std::string> get_words()
 	{
-		std::list<std::string> words = std::list<std::string>();
-		std::ifstream file = std::ifstream(START_FILE);
-		while (!file.eof())
+		std::vector<std::string> words = std::vector<std::string>();
+		std::ifstream file;
+		file.exceptions(std::ifstream::badbit | std::ifstream::failbit);
+
+		try
 		{
-			std::string word;
-			file >> word;
-			words.push_back(word);
+			file.open(START_FILE);
+			while (!file.eof())
+			{
+				std::string word;
+				file >> word;
+				words.push_back(word);
+			}
+			file.close();
 		}
-		file.close();
+		catch (std::ifstream::failure ex)
+		{
+			std::cout << ex.what();
+			exit(1);
+		}
 		return words;
 	}
-	void hardest_task(std::list<std::string> list)
+	void hardest_task(std::vector<std::string> vec)
 	{
 		std::regex reg = std::regex(R"([aoeiyu])", std::regex::icase);
-		std::list<std::string>::iterator minIt;
-		std::list<std::string>::iterator maxIt;
+		std::vector<std::string>::iterator minIt;
+		std::vector<std::string>::iterator maxIt;
 		double min = DBL_MAX;
 		double max = DBL_MIN;
-		for (auto i = list.begin(); i != list.end(); i++)
+		for (auto i = vec.begin(); i != vec.end(); i++)
 		{
 			double match_count = std::distance(std::sregex_iterator(i->begin(), i->end(), reg), std::sregex_iterator());
 			match_count /= i->size();
@@ -250,11 +312,19 @@ namespace lab4
 			}
 			if (match_count > max)
 			{
-				min = match_count;
-				minIt = i;
+				max = match_count;
+				maxIt = i;
 			}
 
 		}
+		if (minIt > maxIt)
+			std::swap(minIt, maxIt);
+		std::ofstream file = std::ofstream(END_FILE);
+		for (; minIt != maxIt + 1; minIt++)
+		{
+			file<<*minIt+"\n";
+		}
+		file.close();
 	}
 
 }
@@ -449,21 +519,29 @@ int main()
 {
 	srand(time(0));
 	
+	lab1();
+
 	//лаба 3
-	/*add_city(city("chicago2", 300));
+	/*add_city(city("chicago2", 30000));
 	add_city(city("new york", 1000000));
 	add_city(city("moscow", 12000000));
-	add_city(city("arizona", 256));
-	add_city(city("bryansk", 512));
+	add_city(city("almata", 256000));
+	add_city(city("bryansk", 512000));
 
 	for (auto &c : get_cities(1,INT_MAX))
 	{
 		c.print();
 	}*/
+
+
+	//лаба 4
 	//lab4::hardest_task(lab4::get_words());
 
+
+
+
 	//lab 5
-	lab5::main_funk();
+	//lab5::main_funk();
 
 
 }

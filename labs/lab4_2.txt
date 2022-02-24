@@ -1,4 +1,3 @@
-anatomize 
 guide
 stimulating
 wood
@@ -26,6 +25,3 @@ needy
 bridge
 coal
 snatch
-meeting
-purring
-person
