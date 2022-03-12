@@ -333,7 +333,7 @@ namespace lab4
 namespace lab5
 {
 	template<typename T>
-	class my_linked_list
+	class my_forward_list
 	{
 	private:
 		template<typename T>
@@ -352,7 +352,7 @@ namespace lab5
 		link<T>* end;
 		link<T>* current;
 	public:
-		my_linked_list()
+		my_forward_list()
 		{
 			end = nullptr;
 			start = end;
@@ -438,7 +438,7 @@ namespace lab5
 		}
 		void reset_iter()
 		{
-			current = start;
+			current = nullptr;
 		}
 		bool move_next()
 		{
@@ -458,6 +458,16 @@ namespace lab5
 		{
 			return current == end;
 		}
+		~my_forward_list()
+		{
+			link<T>* ln = start;
+			while (ln->next != nullptr)
+			{
+				link<T>* nex = ln->next;
+				delete ln;
+				ln = nex;
+			}
+		}
 	};
 
 	void main_funk()
@@ -472,7 +482,7 @@ namespace lab5
 			int coef;
 			int degree;
 		};
-		my_linked_list<polynom> list = my_linked_list<polynom>();
+		my_forward_list<polynom> list = my_forward_list<polynom>();
 		for (int i =0;i< matches.size();i++)
 		{
 			std::smatch match;
@@ -494,7 +504,16 @@ namespace lab5
 			polynom p = { c,d };
 			list.add(p);
 		}
-		my_linked_list<polynom> derivative;
+		int dot;
+		std::cin >> dot;
+		double res = 0;
+		while (list.move_next())
+		{
+			res += list.get_current().coef * pow(dot, list.get_current().degree);
+		}
+		std::cout << res << "\n";
+		list.reset_iter();
+		my_forward_list<polynom> derivative;
 		while (list.move_next())
 		{
 			polynom p = { list.get_current().coef * list.get_current().degree, list.get_current().degree - 1 };
@@ -510,7 +529,11 @@ namespace lab5
 			}
 			std::cout << derivative.get_current().coef;
 			if (derivative.get_current().degree != 0)
-				std::cout << "x^" << derivative.get_current().degree;
+			{
+				std::cout << "x";
+				if(derivative.get_current().degree > 1)
+					std::cout << "^" << derivative.get_current().degree;
+			}
 			first = false;
 		}
 	}
@@ -519,23 +542,9 @@ int main()
 {
 	srand(time(0));
 	
-	lab1();
-
-	//лаба 3
-	/*add_city(city("chicago2", 30000));
-	add_city(city("new york", 1000000));
-	add_city(city("moscow", 12000000));
-	add_city(city("almata", 256000));
-	add_city(city("bryansk", 512000));
-
-	for (auto &c : get_cities(1,INT_MAX))
-	{
-		c.print();
-	}*/
-
 
 	//лаба 4
-	//lab4::hardest_task(lab4::get_words());
+	lab4::hardest_task(lab4::get_words());
 
 
 
