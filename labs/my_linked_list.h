@@ -24,7 +24,7 @@ public:
 	class list_iterator
 	{
 		friend class my_linked_list<T>;
-		my_linked_list::link<T>* current;
+		link<T>* current;
 	public:
 		list_iterator(link<T>* l)
 		{
@@ -59,6 +59,16 @@ public:
 		last = nullptr;
 		_size = 0;
 	}
+	my_linked_list(const my_linked_list<T>& ls)
+	{
+		clear();
+		link<T>* ln = ls.first;
+		while(ln != nullptr)
+		{
+			add(ln->data);
+			ln = ln->next;
+		}
+	}
 	void add(T data)
 	{
 		if (_size > 0)
@@ -75,23 +85,27 @@ public:
 	}
 	void add(T data, int index)
 	{
-		if (index > _size - 1)
+		if (index > _size)
 			throw std::out_of_range("ex");
-		if (index == _size - 1)
+		if (index == _size)
 		{
 			add(data);
 			return;
 		}
 		list_iterator<T> iter = begin();
 		int i = 0;
-		while (i++ != index - 1)
+		while (i++ != index)
 			iter.move_next();
-		link<T>* prevln = iter.current;
-		link<T>* nextln = prevln->next;
+		link<T>* nextln = iter.current;
+		link<T>* prevln = nextln->prev;
 		link<T>* ln = new link<T>(prevln, nextln, data);
-		prevln->next = ln;
-		nextln->prev = ln;
+		if(prevln != nullptr)
+			prevln->next = ln;
+		if (nextln != nullptr)
+			nextln->prev = ln;
 		_size++;
+		if (i == 1)
+			first = ln;
 	}
 	int size()
 	{
@@ -107,6 +121,8 @@ public:
 			ln = temp;
 		}
 		_size = 0;
+		first = nullptr;
+		last = nullptr;
 	}
 	list_iterator<T> begin()
 	{
