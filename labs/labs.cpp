@@ -11,6 +11,7 @@
 #include<fstream>
 #include<list>
 #include<hash_map>
+#include "my_linked_list.h"
 //lab 2, 23
 struct user
 {
@@ -541,16 +542,23 @@ namespace lab5
 int main()
 {
 	srand(time(0));
-	
-
-	//лаба 4
-	lab4::hardest_task(lab4::get_words());
-
-
-
-
-	//lab 5
-	//lab5::main_funk();
-
+	my_linked_list<int> list;
+	list.add(1);
+	list.add(2);
+	list.add(3);
+	list.add(4);
+	list.add(8, 2);
+	list.add(9, 4);
+	auto iter = list.begin();
+	do
+	{
+		std::cout << iter.get_current();
+	} while (iter.move_next());
+	iter = list.end();
+	std::cout << "\n";
+	do
+	{
+		std::cout << iter.get_current();
+	} while (iter.move_back());
 
 }
